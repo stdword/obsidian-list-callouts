@@ -10,7 +10,7 @@ import {
   setIcon,
 } from 'obsidian';
 
-import { iconList as icons } from './iconList';
+import { iconsSearchService, iconsNames } from './iconList';
 import ListCalloutsPlugin from './main';
 
 export interface Callout {
@@ -148,11 +148,11 @@ function attachIconMenu(
             });
             const handler = debounce(
               () => {
-                const res = icons.search(input.value);
+                const res = iconsSearchService.search(input.value);
 
                 if (!input.value) {
-                  getIconIds().forEach((icon) => {
-                    iconList.append(iconEls[icon]);
+                  iconsNames.forEach((icon) => {
+                    iconList.append(iconEls[icon.id]);
                   });
                   return;
                 }
@@ -173,21 +173,22 @@ function attachIconMenu(
 
       const iconList = menu.createDiv('lc-menu-icons', (el) => {
         // Menu
-        getIconIds().forEach((icon) => {
+        iconsNames.forEach((icon) => {
           el.createDiv(
             {
               cls: 'clickable-icon',
               attr: {
-                'data-icon': icon,
+                'data-icon': icon.id,
+                'title': icon.search,
               },
             },
             (item) => {
-              iconEls[icon] = item;
-              setIcon(item, icon);
+              iconEls[icon.id] = item;
+              setIcon(item, icon.id);
               item.onClickEvent(() => {
                 btn.buttonEl.empty();
-                btn.setIcon(icon);
-                onSelect(icon);
+                btn.setIcon(icon.id);
+                onSelect(icon.id);
                 destroyEventHandlers();
                 menuRef.detach();
                 menuRef = null;
