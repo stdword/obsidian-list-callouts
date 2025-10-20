@@ -118,20 +118,7 @@ export default class ListCalloutsPlugin extends Plugin {
 
   async loadSettings() {
     const loadedSettings = (await this.loadData()) as Callout[];
-    const customCallouts = loadedSettings?.filter(
-      (callout) => callout.custom === true
-    );
-    const modifiedBuiltins = loadedSettings?.filter(
-      (callout) => callout.custom !== true
-    );
-
-    this.settings = DEFAULT_SETTINGS.map((s, i) => {
-      return Object.assign({}, s, modifiedBuiltins ? modifiedBuiltins[i] : {});
-    });
-
-    if (customCallouts) {
-      this.settings.push(...customCallouts);
-    }
+    this.settings = loadedSettings && loadedSettings.length > 0 ? loadedSettings : DEFAULT_SETTINGS;
   }
 
   async saveSettings() {

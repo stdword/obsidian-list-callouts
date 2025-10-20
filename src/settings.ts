@@ -263,34 +263,30 @@ export function buildSetting(
       });
 
       // Color selection.
-      if (callout.custom) {
-        const [r, g, b] = callout.color
-          .split(',')
-          .map((v) => parseInt(v.trim(), 10));
+      const [r, g, b] = callout.color
+        .split(',')
+        .map((v) => parseInt(v.trim(), 10));
 
-        const color = new ColorComponent(inputContainer)
-          .setValueRgb({ r, g, b })
-          .onChange((_value) => {
-            const { r, g, b } = color.getValueRgb();
-            plugin.settings[index].color = `${r}, ${g}, ${b}`;
+      const color = new ColorComponent(inputContainer)
+        .setValueRgb({ r, g, b })
+        .onChange((_value) => {
+          const { r, g, b } = color.getValueRgb();
+          plugin.settings[index].color = `${r}, ${g}, ${b}`;
 
-            plugin.saveSettings();
-            buildSettingCallout(calloutContainer, plugin.settings[index]);
-          });
-      }
+          plugin.saveSettings();
+          buildSettingCallout(calloutContainer, plugin.settings[index]);
+        });
 
       // Delete button.
-      if (callout.custom) {
-        const rightAlign = inputContainer.createDiv({
-          cls: 'lc-input-right-align',
+      const rightAlign = inputContainer.createDiv({
+        cls: 'lc-input-right-align',
+      });
+      new ButtonComponent(rightAlign)
+        .setButtonText('Delete')
+        .setWarning()
+        .onClick((_e) => {
+          onDelete(index);
         });
-        new ButtonComponent(rightAlign)
-          .setButtonText('Delete')
-          .setWarning()
-          .onClick((_e) => {
-            onDelete(index);
-          });
-      }
     });
   });
 }
