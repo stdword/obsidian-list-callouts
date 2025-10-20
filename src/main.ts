@@ -88,28 +88,32 @@ export default class ListCalloutsPlugin extends Plugin {
     return {
       callouts: this.settings.reduce<Record<string, Callout>>((record, curr) => {
         record[curr.char] = curr;
-        return record
+        return record;
       }, {}),
       re: new RegExp(
         `(^\\s*[-*+](?: \\[.\\])? |^\\s*\\d+[\\.\\)](?: \\[.\\])? )(${
-          this.settings.map(callout => escapeStringRegexp(callout.char)).join('|')
+          this.settings
+            .map((callout) => escapeStringRegexp(callout.char))
+            .join('|')
         }) `
       ),
-    }
+    };
   }
 
   buildPostProcessorConfig() {
     this.postProcessorConfig = {
       callouts: this.settings.reduce<Record<string, Callout>>((record, curr) => {
         record[curr.char] = curr;
-        return record
+        return record;
       }, {}),
       re: new RegExp(
         `^(${
-          this.settings.map(callout => escapeStringRegexp(callout.char)).join('|')
+          this.settings
+            .map((callout) => escapeStringRegexp(callout.char))
+            .join('|')
         }) `
       ),
-    }
+    };
   }
 
   async loadSettings() {
