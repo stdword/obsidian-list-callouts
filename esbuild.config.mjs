@@ -15,8 +15,19 @@ esbuild
     banner: {
       js: banner,
     },
-    entryPoints: ['./src/main.ts'],
+    entryPoints: [
+      './src/index.js',
+      './src/styles.css',
+      'manifest.json',
+    ],
     bundle: true,
+    outdir: 'dist',
+    outfile: 'main.js',
+    loader: {
+      '.css': 'copy',
+      '.json': 'copy',
+    },
+
     external: [
       'obsidian',
       'electron',
@@ -50,7 +61,6 @@ esbuild
     logLevel: 'info',
     sourcemap: prod ? false : 'inline',
     treeShaking: true,
-    outfile: 'main.js',
     minify: prod,
   })
   .catch(() => process.exit(1));
