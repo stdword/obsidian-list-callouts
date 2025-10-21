@@ -2,40 +2,24 @@ import { MarkdownPostProcessor, setIcon } from 'obsidian';
 
 import { CalloutConfig } from './settings';
 
-function getFirstTextNode(li: HTMLElement) {
+function getFirstNodeWithText(li: HTMLElement) {
   for (const node of Array.from(li.childNodes)) {
-    if (
-      node.nodeType === document.ELEMENT_NODE &&
-      (node as HTMLElement).classList.contains('tasks-list-text')
-    ) {
-      const descriptionNode = (node as HTMLElement).firstElementChild;
-      if (descriptionNode?.classList.contains('task-description')) {
-        const textNode = descriptionNode.firstElementChild?.firstChild;
-        if (textNode.nodeType === document.TEXT_NODE) {
-          return textNode;
-        }
-      }
-    }
-
-    if (
-      node.nodeType === document.ELEMENT_NODE &&
-      (node as HTMLElement).tagName === 'P'
-    ) {
-      return node.firstChild;
-    }
-
-    if (node.nodeType !== document.TEXT_NODE) {
-      continue;
-    }
-
-    if ((node as Text).nodeValue.trim() === '') {
-      continue;
-    }
-
-    return node;
+    // @ts-expect-error
+    if (![document.TEXT_NODE, document.ELEMENT_NODE].contains(node.nodeType))
+      continue
+    if (node.textContent.trim() !== '')
+      return node;
   }
 
   return null;
+}
+
+function unpackSimpleTextFromNode(node: ChildNode) {
+  if (node.nodeName === 'P')
+    node = node.firstChild;
+  if (node.nodeType !== document.TEXT_NODE)
+    return ''
+  return node.textContent
 }
 
 function wrapLiContent(li: HTMLElement) {
@@ -85,10 +69,10 @@ export function buildPostProcessor(
     }
 
     el.findAll('li').forEach((li) => {
-      const node = getFirstTextNode(li);
+      const node = getFirstNodeWithText(li);
       if (!node) return;
 
-      const text = node.textContent;
+      const text = unpackSimpleTextFromNode(node);
       if (!text) return;
 
       const match = text.match(config.re);
