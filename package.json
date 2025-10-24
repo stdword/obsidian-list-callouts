@@ -1,6 +1,6 @@
 {
   "name": "obsidian-list-callouts",
-  "version": "1.3.0",
+  "version": "1.3.0-DEV",
   "description": "Create simple callouts in lists.",
   "main": "main.js",
   "scripts": {
