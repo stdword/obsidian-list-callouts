@@ -39,4 +39,4 @@ jobs:
             dist/main.js
             dist/styles.css
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
